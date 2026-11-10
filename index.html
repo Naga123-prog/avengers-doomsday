@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avengers: Doomsday — 18 Desember 2026</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="https://image.tmdb.org/t/p/w92/9jlZ59UALLLOE279HMT19rP9XQs.jpg">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="loader-content">
+            <img src="https://image.tmdb.org/t/p/w500/ou2QfUBPnp5tGqYj5yn3VIsWtUF.png"
+                 alt="Avengers Doomsday Logo" class="loader-logo">
+            <div class="loader-text">DOOMSDAY PROTOCOL INITIATED...</div>
+            <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+        </div>
+    </div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particles"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#hero-banner" class="nav-logo">
+                <img src="https://image.tmdb.org/t/p/w154/ou2QfUBPnp5tGqYj5yn3VIsWtUF.png"
+                     alt="Logo" class="nav-logo-img">
+            </a>
+            <ul class="nav-links">
+                <li><a href="#hero-banner" data-section="hero-banner">Beranda</a></li>
+                <li><a href="#countdown-section" data-section="countdown-section">Countdown</a></li>
+                <li><a href="#about" data-section="about">Tentang</a></li>
+                <li><a href="#cast" data-section="cast">Cast</a></li>
+                <li><a href="#villain" data-section="villain">Villain</a></li>
+                <li><a href="#schedule" data-section="schedule">Jadwal</a></li>
+                <li><a href="#tickets" data-section="tickets">Tiket</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section id="hero-banner">
+        <div class="banner-poster-bg">
+            <img src="https://image.tmdb.org/t/p/original/9jlZ59UALLLOE279HMT19rP9XQs.jpg"
+                 alt="" class="banner-poster-img">
+        </div>
+        <div class="banner-overlay"></div>
+        <div class="banner-grid-overlay"></div>
+        <div class="banner-content">
+            <div class="marvel-badge">
+                <span class="badge-line"></span>
+                MARVEL STUDIOS
+                <span class="badge-line"></span>
+            </div>
+            <div class="banner-logo-wrap">
+                <img src="https://image.tmdb.org/t/p/original/ou2QfUBPnp5tGqYj5yn3VIsWtUF.png"
+                     alt="Avengers: Doomsday" class="banner-logo">
+            </div>
+            <p class="banner-tagline">Takdir Semesta Ada di Tangan Doom</p>
+            <div class="banner-date-badge">
+                <i class="fas fa-calendar-alt"></i>
+                18 DESEMBER 2026
+            </div>
+            <div class="banner-cta">
+                <a href="#countdown-section" class="btn-primary">
+                    <i class="fas fa-clock"></i> Lihat Countdown
+                </a>
+                <a href="#tickets" class="btn-secondary">
+                    <i class="fas fa-ticket-alt"></i> Beli Tiket
+                </a>
+            </div>
+            <div class="banner-meta">
+                <span><i class="fas fa-film"></i> Action / Sci-Fi</span>
+                <span><i class="fas fa-clock"></i> 165 Menit</span>
+                <span><i class="fas fa-video"></i> Russo Brothers</span>
+            </div>
+        </div>
+
+        <!-- 3D Floating Cube -->
+        <div class="doom-3d-container">
+            <div class="doom-cube">
+                <div class="cube-face front"><i class="fas fa-mask"></i></div>
+                <div class="cube-face back"><i class="fas fa-shield-halved"></i></div>
+                <div class="cube-face right"><i class="fas fa-bolt"></i></div>
+                <div class="cube-face left"><i class="fas fa-spider"></i></div>
+                <div class="cube-face top"><i class="fas fa-star"></i></div>
+                <div class="cube-face bottom"><i class="fas fa-fire"></i></div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="mouse"><div class="wheel"></div></div>
+            <span>Scroll ke bawah</span>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section id="countdown-section">
+        <div class="section-container">
+            <div class="countdown-logo-wrap">
+                <img src="https://image.tmdb.org/t/p/w500/ou2QfUBPnp5tGqYj5yn3VIsWtUF.png"
+                     alt="Avengers: Doomsday" class="countdown-logo">
+            </div>
+
+            <h2 class="section-title glow-green">HITUNG MUNDUR MENUJU DOOMSDAY</h2>
+            <p class="section-subtitle">Premiere — 18 Desember 2026</p>
+
+            <div class="countdown-grid">
+                <div class="countdown-card">
+                    <div class="countdown-inner">
+                        <div class="countdown-value" id="days">00</div>
+                        <svg class="countdown-svg" viewBox="0 0 120 120">
+                            <circle class="ring-bg" cx="60" cy="60" r="54"/>
+                            <circle class="ring-progress" cx="60" cy="60" r="54" id="days-ring"/>
+                        </svg>
+                    </div>
+                    <div class="countdown-label">HARI</div>
+                </div>
+                <div class="countdown-card">
+                    <div class="countdown-inner">
+                        <div class="countdown-value" id="hours">00</div>
+                        <svg class="countdown-svg" viewBox="0 0 120 120">
+                            <circle class="ring-bg" cx="60" cy="60" r="54"/>
+                            <circle class="ring-progress" cx="60" cy="60" r="54" id="hours-ring"/>
+                        </svg>
+                    </div>
+                    <div class="countdown-label">JAM</div>
+                </div>
+                <div class="countdown-card">
+                    <div class="countdown-inner">
+                        <div class="countdown-value" id="minutes">00</div>
+                        <svg class="countdown-svg" viewBox="0 0 120 120">
+                            <circle class="ring-bg" cx="60" cy="60" r="54"/>
+                            <circle class="ring-progress" cx="60" cy="60" r="54" id="minutes-ring"/>
+                        </svg>
+                    </div>
+                    <div class="countdown-label">MENIT</div>
+                </div>
+                <div class="countdown-card">
+                    <div class="countdown-inner">
+                        <div class="countdown-value" id="seconds">00</div>
+                        <svg class="countdown-svg" viewBox="0 0 120 120">
+                            <circle class="ring-bg" cx="60" cy="60" r="54"/>
+                            <circle class="ring-progress" cx="60" cy="60" r="54" id="seconds-ring"/>
+                        </svg>
+                    </div>
+                    <div class="countdown-label">DETIK</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-container">
+            <h2 class="section-title reveal-text">TENTANG FILM</h2>
+            <div class="about-grid">
+                <div class="about-card glass-card reveal-left">
+                    <div class="about-poster-wrap">
+                        <img src="https://image.tmdb.org/t/p/w500/9jlZ59UALLLOE279HMT19rP9XQs.jpg"
+                             alt="Poster" class="about-poster">
+                    </div>
+                </div>
+                <div class="about-card glass-card reveal-right">
+                    <h3 class="about-heading">Sinopsis</h3>
+                    <p class="about-text">
+                        Setelah kehancuran multiverse, ancaman baru muncul dari balik tabir realitas.
+                        Doctor Doom — penguasa Latveria dengan kekuatan sihir dan teknologi yang tak tertandingi —
+                        menemukan cara untuk mengendalikan seluruh garis waktu. Para Avengers harus bersatu kembali,
+                        melampaui batas dimensi, untuk menghadapi musuh paling berbahaya yang pernah ada.
+                    </p>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-clapperboard"></i></span>
+                            <div>
+                                <span class="detail-label">Sutradara</span>
+                                <span class="detail-value">Anthony & Joe Russo</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-pen-nib"></i></span>
+                            <div>
+                                <span class="detail-label">Penulis</span>
+                                <span class="detail-value">Stephen McFeely & Michael Waldron</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-building"></i></span>
+                            <div>
+                                <span class="detail-label">Produser</span>
+                                <span class="detail-value">Kevin Feige</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-music"></i></span>
+                            <div>
+                                <span class="detail-label">Musik</span>
+                                <span class="detail-value">Alan Silvestri</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-clock"></i></span>
+                            <div>
+                                <span class="detail-label">Durasi</span>
+                                <span class="detail-value">~165 Menit</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-certificate"></i></span>
+                            <div>
+                                <span class="detail-label">Rating</span>
+                                <span class="detail-value">PG-13</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cast Section -->
+    <section id="cast">
+        <div class="section-container">
+            <h2 class="section-title reveal-text">CAST LENGKAP</h2>
+            <p class="section-subtitle">40+ Bintang dalam Satu Film</p>
+
+            <div class="cast-controls">
+                <div class="cast-filter">
+                    <button class="filter-btn active" data-filter="all">Semua</button>
+                    <button class="filter-btn" data-filter="avenger">Avengers</button>
+                    <button class="filter-btn" data-filter="f4">Fantastic Four</button>
+                    <button class="filter-btn" data-filter="xmen">X-Men</button>
+                    <button class="filter-btn" data-filter="cosmic">Cosmic / Lainnya</button>
+                </div>
+                <div class="cast-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="castSearch" placeholder="Cari karakter atau aktor..." autocomplete="off">
+                </div>
+            </div>
+
+            <div class="cast-grid" id="castGrid">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Villain Section -->
+    <section id="villain">
+        <div class="villain-bg-fx"></div>
+        <div class="section-container">
+            <h2 class="section-title reveal-text" style="color: var(--doom-green);">THE MAIN VILLAIN</h2>
+            <div class="villain-showcase">
+                <div class="villain-visual">
+                    <div class="villain-photo-frame">
+                        <div class="villain-photo-glow"></div>
+                        <img src="https://image.tmdb.org/t/p/w500/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg"
+                             alt="Robert Downey Jr. as Doctor Doom" class="villain-photo">
+                        <div class="villain-photo-overlay">
+                            <span class="villain-photo-label">DOCTOR DOOM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="villain-info glass-card">
+                    <div class="threat-badge"><i class="fas fa-skull-crossbones"></i> ANCAMAN LEVEL OMEGA</div>
+                    <h3 class="villain-name">DOCTOR DOOM</h3>
+                    <h4 class="villain-realname">Victor Von Doom</h4>
+                    <p class="villain-actor"><i class="fas fa-star"></i> Robert Downey Jr.</p>
+                    <p class="villain-desc">
+                        Penguasa mutlak Latveria. Jenius ilmiah sekaligus penyihir tingkat tinggi.
+                        Doctor Doom menguasai sihir gelap dan teknologi canggih, menjadikannya
+                        ancaman eksistensial bagi seluruh multiverse. Dengan Doom Armor yang
+                        hampir tidak bisa dihancurkan dan ambisi menguasai seluruh realitas,
+                        ia adalah musuh paling berbahaya yang pernah dihadapi Avengers.
+                    </p>
+                    <div class="power-stats">
+                        <div class="pwr"><span class="pwr-label">Kekuatan</span><div class="pwr-track"><div class="pwr-fill" data-val="95"></div></div></div>
+                        <div class="pwr"><span class="pwr-label">Kecerdasan</span><div class="pwr-track"><div class="pwr-fill" data-val="100"></div></div></div>
+                        <div class="pwr"><span class="pwr-label">Sihir</span><div class="pwr-track"><div class="pwr-fill" data-val="92"></div></div></div>
+                        <div class="pwr"><span class="pwr-label">Teknologi</span><div class="pwr-track"><div class="pwr-fill" data-val="98"></div></div></div>
+                        <div class="pwr"><span class="pwr-label">Ancaman</span><div class="pwr-track"><div class="pwr-fill" data-val="100"></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section id="schedule">
+        <div class="section-container">
+            <h2 class="section-title reveal-text">JADWAL TAYANG</h2>
+            <p class="section-subtitle">Tayang Serentak di Seluruh Bioskop Indonesia</p>
+
+            <div class="schedule-grid">
+                <div class="cinema-card glass-card reveal-up">
+                    <div class="cinema-badge cgv-bg">CGV</div>
+                    <h3>CGV Cinemas</h3>
+                    <div class="format-list">
+                        <span class="fmt">Regular 2D</span>
+                        <span class="fmt glow">IMAX</span>
+                        <span class="fmt glow">4DX</span>
+                        <span class="fmt glow">ScreenX</span>
+                        <span class="fmt glow">Gold Class</span>
+                        <span class="fmt glow">Velvet</span>
+                        <span class="fmt glow">Sweetbox</span>
+                    </div>
+                    <div class="showtime-row">
+                        <span class="st">10:00</span>
+                        <span class="st">12:50</span>
+                        <span class="st">15:40</span>
+                        <span class="st">18:30</span>
+                        <span class="st">21:20</span>
+                        <span class="st gold">00:00 <small>Midnight</small></span>
+                    </div>
+                    <p class="cinema-note"><i class="fas fa-map-marker-alt"></i> 80+ lokasi se-Indonesia</p>
+                </div>
+
+                <div class="cinema-card glass-card reveal-up">
+                    <div class="cinema-badge xxi-bg">XXI</div>
+                    <h3>Cinema XXI</h3>
+                    <div class="format-list">
+                        <span class="fmt">Regular 2D</span>
+                        <span class="fmt glow">IMAX</span>
+                        <span class="fmt glow">The Premiere</span>
+                        <span class="fmt glow">Dolby Atmos</span>
+                    </div>
+                    <div class="showtime-row">
+                        <span class="st">10:30</span>
+                        <span class="st">13:20</span>
+                        <span class="st">16:10</span>
+                        <span class="st">19:00</span>
+                        <span class="st">21:50</span>
+                        <span class="st gold">00:00 <small>Midnight</small></span>
+                    </div>
+                    <p class="cinema-note"><i class="fas fa-map-marker-alt"></i> Jaringan terbesar — 200+ lokasi</p>
+                </div>
+
+                <div class="cinema-card glass-card reveal-up">
+                    <div class="cinema-badge cine-bg">Cin&eacute;polis</div>
+                    <h3>Cin&eacute;polis Indonesia</h3>
+                    <div class="format-list">
+                        <span class="fmt">Regular 2D</span>
+                        <span class="fmt glow">Junior</span>
+                        <span class="fmt glow">VIP</span>
+                        <span class="fmt glow">Macro XE</span>
+                    </div>
+                    <div class="showtime-row">
+                        <span class="st">11:00</span>
+                        <span class="st">13:50</span>
+                        <span class="st">16:40</span>
+                        <span class="st">19:30</span>
+                        <span class="st">22:20</span>
+                    </div>
+                    <p class="cinema-note"><i class="fas fa-map-marker-alt"></i> 30+ lokasi kota besar</p>
+                </div>
+
+                <div class="cinema-card glass-card reveal-up">
+                    <div class="cinema-badge plat-bg">Platinum</div>
+                    <h3>Platinum Cineplex</h3>
+                    <div class="format-list">
+                        <span class="fmt">Regular 2D</span>
+                        <span class="fmt glow">Dolby Surround</span>
+                    </div>
+                    <div class="showtime-row">
+                        <span class="st">10:00</span>
+                        <span class="st">12:50</span>
+                        <span class="st">15:40</span>
+                        <span class="st">18:30</span>
+                    </div>
+                    <p class="cinema-note"><i class="fas fa-map-marker-alt"></i> Harga terjangkau — 20+ lokasi</p>
+                </div>
+            </div>
+
+            <!-- Premiere Event -->
+            <div class="premiere-card glass-card reveal-up">
+                <div class="premiere-badge"><i class="fas fa-crown"></i> GALA PREMIERE</div>
+                <h3>Grand Premiere Indonesia</h3>
+                <div class="premiere-details">
+                    <p><i class="fas fa-calendar-star"></i> <strong>17 Desember 2026</strong> — Satu hari lebih awal!</p>
+                    <p><i class="fas fa-location-dot"></i> Plaza Indonesia XXI, Jakarta Pusat</p>
+                    <p><i class="fas fa-clock"></i> Red Carpet: 18:00 WIB &bull; Film: 19:30 WIB</p>
+                    <p><i class="fas fa-shirt"></i> Dress Code: Superhero / Formal</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tickets Section -->
+    <section id="tickets">
+        <div class="section-container">
+            <h2 class="section-title reveal-text">HARGA TIKET</h2>
+            <p class="section-subtitle">Pilih Pengalaman Menontonmu</p>
+
+            <div class="tickets-grid">
+                <!-- Regular -->
+                <div class="ticket-card glass-card reveal-up">
+                    <div class="ticket-tier">REGULAR 2D</div>
+                    <div class="ticket-price">
+                        <span class="rp">Rp</span>
+                        <span class="amt">50.000</span>
+                    </div>
+                    <span class="price-note">Weekday mulai dari</span>
+                    <ul class="ticket-perks">
+                        <li><i class="fas fa-check"></i> Layar Standar</li>
+                        <li><i class="fas fa-check"></i> Surround Sound</li>
+                        <li><i class="fas fa-check"></i> Kursi Standar</li>
+                        <li><i class="fas fa-check"></i> Tersedia di semua bioskop</li>
+                    </ul>
+                    <div class="price-range">
+                        <small>Weekend / Holiday: Rp 60.000 — 70.000</small>
+                    </div>
+                    <button class="ticket-btn" onclick="alert('Beli tiket di website resmi bioskop pilihanmu!')">Beli Tiket</button>
+                </div>
+
+                <!-- IMAX -->
+                <div class="ticket-card glass-card reveal-up featured-ticket">
+                    <div class="popular-ribbon">TERPOPULER</div>
+                    <div class="ticket-tier">IMAX</div>
+                    <div class="ticket-price">
+                        <span class="rp">Rp</span>
+                        <span class="amt">100.000</span>
+                    </div>
+                    <span class="price-note">Weekday mulai dari</span>
+                    <ul class="ticket-perks">
+                        <li><i class="fas fa-check"></i> Layar IMAX Raksasa</li>
+                        <li><i class="fas fa-check"></i> IMAX Laser 4K</li>
+                        <li><i class="fas fa-check"></i> 12-Channel Sound</li>
+                        <li><i class="fas fa-check"></i> Kursi Premium</li>
+                        <li><i class="fas fa-check"></i> Scene Eksklusif IMAX</li>
+                    </ul>
+                    <div class="price-range">
+                        <small>Weekend / Holiday: Rp 120.000 — 130.000</small>
+                    </div>
+                    <button class="ticket-btn btn-glow" onclick="alert('Beli tiket IMAX di CGV atau XXI!')">Beli Tiket</button>
+                </div>
+
+                <!-- 4DX -->
+                <div class="ticket-card glass-card reveal-up">
+                    <div class="ticket-tier">4DX</div>
+                    <div class="ticket-price">
+                        <span class="rp">Rp</span>
+                        <span class="amt">100.000</span>
+                    </div>
+                    <span class="price-note">Weekday mulai dari</span>
+                    <ul class="ticket-perks">
+                        <li><i class="fas fa-check"></i> Kursi Gerak 4D</li>
+                        <li><i class="fas fa-check"></i> Efek Angin & Air</li>
+                        <li><i class="fas fa-check"></i> Efek Aroma & Kabut</li>
+                        <li><i class="fas fa-check"></i> Sensasi Immersive Total</li>
+                    </ul>
+                    <div class="price-range">
+                        <small>Weekend / Holiday: Rp 120.000 — 130.000</small>
+                    </div>
+                    <button class="ticket-btn" onclick="alert('Beli tiket 4DX di CGV!')">Beli Tiket</button>
+                </div>
+
+                <!-- Gold Class -->
+                <div class="ticket-card glass-card reveal-up">
+                    <div class="ticket-tier">GOLD CLASS</div>
+                    <div class="ticket-price">
+                        <span class="rp">Rp</span>
+                        <span class="amt">150.000</span>
+                    </div>
+                    <span class="price-note">Weekday mulai dari</span>
+                    <ul class="ticket-perks">
+                        <li><i class="fas fa-check"></i> Sofa Recliner Premium</li>
+                        <li><i class="fas fa-check"></i> Selimut & Bantal</li>
+                        <li><i class="fas fa-check"></i> In-Seat Dining</li>
+                        <li><i class="fas fa-check"></i> Lounge Eksklusif</li>
+                    </ul>
+                    <div class="price-range">
+                        <small>Weekend / Holiday: Rp 175.000 — 200.000</small>
+                    </div>
+                    <button class="ticket-btn" onclick="alert('Beli tiket Gold Class di CGV!')">Beli Tiket</button>
+                </div>
+
+                <!-- The Premiere -->
+                <div class="ticket-card glass-card reveal-up">
+                    <div class="ticket-tier">THE PREMIERE</div>
+                    <div class="ticket-price">
+                        <span class="rp">Rp</span>
+                        <span class="amt">150.000</span>
+                    </div>
+                    <span class="price-note">Weekday mulai dari</span>
+                    <ul class="ticket-perks">
+                        <li><i class="fas fa-check"></i> Recliner Sofa Kulit</li>
+                        <li><i class="fas fa-check"></i> Dolby Atmos Sound</li>
+                        <li><i class="fas fa-check"></i> Snack Box Included</li>
+                        <li><i class="fas fa-check"></i> Private Lounge</li>
+                    </ul>
+                    <div class="price-range">
+                        <small>Weekend / Holiday: Rp 175.000 — 200.000</small>
+                    </div>
+                    <button class="ticket-btn" onclick="alert('Beli tiket The Premiere di XXI!')">Beli Tiket</button>
+                </div>
+
+                <!-- Velvet / Sweetbox -->
+                <div class="ticket-card glass-card reveal-up">
+                    <div class="ticket-tier">VELVET / SWEETBOX</div>
+                    <div class="ticket-price">
+                        <span class="rp">Rp</span>
+                        <span class="amt">200.000</span>
+                    </div>
+                    <span class="price-note">Weekday mulai dari / seat</span>
+                    <ul class="ticket-perks">
+                        <li><i class="fas fa-check"></i> Sofa Bed Couple</li>
+                        <li><i class="fas fa-check"></i> Maximum Privacy</li>
+                        <li><i class="fas fa-check"></i> Premium Sound</li>
+                        <li><i class="fas fa-check"></i> All-Inclusive Package</li>
+                    </ul>
+                    <div class="price-range">
+                        <small>Weekend / Holiday: Rp 250.000 — 300.000</small>
+                    </div>
+                    <button class="ticket-btn" onclick="alert('Beli tiket Velvet/Sweetbox di CGV!')">Beli Tiket</button>
+                </div>
+            </div>
+
+            <p class="price-disclaimer">
+                <i class="fas fa-info-circle"></i>
+                Harga dapat berbeda tergantung lokasi bioskop dan kota. Cek harga terbaru di website resmi
+                <a href="https://www.cgv.id" target="_blank" rel="noopener">CGV</a>,
+                <a href="https://www.21cineplex.com" target="_blank" rel="noopener">XXI</a>, atau
+                <a href="https://www.cinepolis.co.id" target="_blank" rel="noopener">Cinepolis</a>.
+            </p>
+
+            <!-- Streaming -->
+            <div class="streaming-box glass-card reveal-up">
+                <h3><i class="fas fa-tv"></i> Streaming Setelah Bioskop</h3>
+                <div class="stream-row">
+                    <div class="stream-item">
+                        <div class="stream-icon disney-plus"><i class="fas fa-play"></i></div>
+                        <strong>Disney+ Hotstar</strong>
+                        <small>Sekitar 90 hari setelah rilis bioskop</small>
+                    </div>
+                    <div class="stream-item">
+                        <div class="stream-icon digital"><i class="fas fa-download"></i></div>
+                        <strong>Digital Purchase</strong>
+                        <small>iTunes, Google Play — 60 hari setelah rilis</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <img src="https://image.tmdb.org/t/p/w154/ou2QfUBPnp5tGqYj5yn3VIsWtUF.png"
+                 alt="Logo" class="footer-logo">
+            <p class="footer-date">18 Desember 2026 &mdash; Di Seluruh Bioskop</p>
+            <div class="footer-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+            </div>
+            <div class="footer-line"></div>
+            <p class="footer-legal">&copy; 2026 MARVEL. Fan-made interactive schedule. Not affiliated with Marvel Studios or Disney.</p>
+            <p class="footer-tmdb">Data film dari <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a></p>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button id="backToTop"><i class="fas fa-chevron-up"></i></button>
+
+    <script src="app.js"></script>
+</body>
+</html>
