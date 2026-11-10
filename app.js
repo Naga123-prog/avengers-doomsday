@@ -194,6 +194,14 @@ document.addEventListener("DOMContentLoaded", () => {
     initScrollReveal();
     initVillainStats();
     initBackToTop();
+    initScrollProgress();
+    initTrailerModal();
+    initSound();
+    initShare();
+    initGallery();
+    initQuiz();
+    initEasterEgg();
+    initParallax();
 });
 
 // ─── LOADER ─────────────────────────────────
@@ -501,4 +509,339 @@ function initBackToTop() {
     const btn = document.getElementById("backToTop");
     addEventListener("scroll", () => btn.classList.toggle("visible", scrollY > 400));
     btn.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+}
+
+// ─── SCROLL PROGRESS BAR ────────────────────
+
+function initScrollProgress() {
+    const bar = document.getElementById("scrollProgress");
+    addEventListener("scroll", () => {
+        const h = document.documentElement.scrollHeight - innerHeight;
+        bar.style.width = (scrollY / h * 100) + "%";
+    });
+}
+
+// ─── TRAILER MODAL ──────────────────────────
+
+function initTrailerModal() {
+    const modal = document.getElementById("trailerModal");
+    const frame = document.getElementById("trailerFrame");
+    const openBtn = document.getElementById("openTrailer");
+    const closeBtn = document.getElementById("closeTrailer");
+    const trailerUrl = "https://www.youtube.com/embed/PyTEUYXVDaU?autoplay=1&rel=0";
+
+    if (openBtn) openBtn.addEventListener("click", () => {
+        frame.src = trailerUrl;
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    });
+
+    function closeModal() {
+        modal.classList.remove("active");
+        frame.src = "";
+        document.body.style.overflow = "";
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (modal) modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+    });
+    addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("active")) closeModal();
+    });
+}
+
+// ─── AMBIENT SOUND (Web Audio API) ──────────
+
+function initSound() {
+    const btn = document.getElementById("soundToggle");
+    let ctx, playing = false, nodes = [];
+
+    function createDrone() {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const freqs = [55, 82.5, 110, 165];
+        const master = ctx.createGain();
+        master.gain.value = 0.06;
+        master.connect(ctx.destination);
+
+        freqs.forEach((f, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = i < 2 ? "sine" : "triangle";
+            osc.frequency.value = f;
+            gain.gain.value = i < 2 ? 0.4 : 0.15;
+            osc.connect(gain);
+            gain.connect(master);
+            osc.start();
+            nodes.push(osc);
+        });
+
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        lfo.frequency.value = 0.15;
+        lfoGain.gain.value = 3;
+        lfo.connect(lfoGain);
+        freqs.forEach((_, i) => { if (nodes[i]) lfoGain.connect(nodes[i].frequency); });
+        lfo.start();
+        nodes.push(lfo);
+    }
+
+    btn.addEventListener("click", () => {
+        if (!playing) {
+            createDrone();
+            playing = true;
+            btn.classList.add("playing");
+            btn.innerHTML = '<i class="fas fa-volume-high"></i>';
+        } else {
+            nodes.forEach(n => n.stop());
+            nodes = [];
+            if (ctx) ctx.close();
+            playing = false;
+            btn.classList.remove("playing");
+            btn.innerHTML = '<i class="fas fa-volume-xmark"></i>';
+        }
+    });
+}
+
+// ─── SHARE BUTTONS ──────────────────────────
+
+function initShare() {
+    const fab = document.getElementById("shareFab");
+    const toggle = document.getElementById("shareToggle");
+    const url = "https://naga123-prog.github.io/avengers-doomsday/";
+    const text = "Cek jadwal Avengers: Doomsday — 18 Desember 2026!";
+
+    toggle.addEventListener("click", () => fab.classList.toggle("open"));
+
+    document.getElementById("shareWA").href =
+        "https://wa.me/?text=" + encodeURIComponent(text + " " + url);
+    document.getElementById("shareTW").href =
+        "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(url);
+
+    document.getElementById("shareCopy").addEventListener("click", () => {
+        navigator.clipboard.writeText(url).then(() => {
+            const btn = document.getElementById("shareCopy");
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => btn.innerHTML = '<i class="fas fa-link"></i>', 2000);
+        });
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!fab.contains(e.target)) fab.classList.remove("open");
+    });
+}
+
+// ─── GALLERY + LIGHTBOX ─────────────────────
+
+function initGallery() {
+    const grid = document.getElementById("galleryGrid");
+    const backdrops = [
+        "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
+        "/g3gpP5YDbA85DsA0bt5mgGQIe5q.jpg",
+        "/6TgmIXoVGEDyp0MSoVytIeyfhDR.jpg",
+        "/4NxnrRmI7goXMsRASwSegf50MC8.jpg",
+        "/tXNt66khUBZcusc22INKCeGRr4l.jpg",
+        "/pGbP900NvKzOtLWdyH0sWmLQu1G.jpg",
+        "/Ad0C6CKwmp9mNz2iit2r9shuZTN.jpg",
+        "/s4v0UX1anfXm0UvloLsTTJ4v222.jpg",
+        "/6KDDoTq8Vq3HuQHULzuvPiCJbMI.jpg",
+        "/kg4X2vidTNtAHGBZYmaxn3FqrT1.jpg",
+        "/iPaWPsBPmWIginVeU5oCa5ecmle.jpg",
+        "/esV9PPwm3WQYvAOmYOmyTyodjlt.jpg"
+    ];
+
+    const base = "https://image.tmdb.org/t/p/";
+    if (!grid) return;
+
+    backdrops.forEach((p, i) => {
+        const item = document.createElement("div");
+        item.className = "gallery-item reveal-up";
+        item.style.transitionDelay = `${i * 0.05}s`;
+        item.innerHTML = `<img src="${base}w780${p}" alt="Scene ${i+1}" loading="lazy">`;
+        item.addEventListener("click", () => openLightbox(i));
+        grid.appendChild(item);
+    });
+
+    const lb = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lbImg");
+    const lbCounter = document.getElementById("lbCounter");
+    let currentIdx = 0;
+
+    function openLightbox(idx) {
+        currentIdx = idx;
+        lbImg.src = base + "original" + backdrops[idx];
+        lbCounter.textContent = `${idx + 1} / ${backdrops.length}`;
+        lb.classList.add("active");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+        lb.classList.remove("active");
+        document.body.style.overflow = "";
+    }
+
+    document.getElementById("lbClose").addEventListener("click", closeLightbox);
+    document.getElementById("lbPrev").addEventListener("click", () => {
+        currentIdx = (currentIdx - 1 + backdrops.length) % backdrops.length;
+        lbImg.src = base + "original" + backdrops[currentIdx];
+        lbCounter.textContent = `${currentIdx + 1} / ${backdrops.length}`;
+    });
+    document.getElementById("lbNext").addEventListener("click", () => {
+        currentIdx = (currentIdx + 1) % backdrops.length;
+        lbImg.src = base + "original" + backdrops[currentIdx];
+        lbCounter.textContent = `${currentIdx + 1} / ${backdrops.length}`;
+    });
+
+    lb.addEventListener("click", (e) => { if (e.target === lb) closeLightbox(); });
+    addEventListener("keydown", (e) => {
+        if (!lb.classList.contains("active")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") document.getElementById("lbPrev").click();
+        if (e.key === "ArrowRight") document.getElementById("lbNext").click();
+    });
+}
+
+// ─── QUIZ: WHICH AVENGER ARE YOU? ───────────
+
+function initQuiz() {
+    const container = document.getElementById("quizContent");
+    const startBtn = document.getElementById("startQuiz");
+    if (!startBtn) return;
+
+    const questions = [
+        { q: "Dalam situasi berbahaya, apa yang pertama kamu lakukan?",
+          opts: [
+            { text: "Langsung maju tanpa pikir panjang", scores: {thor:2,wolverine:2} },
+            { text: "Analisis situasi dulu, baru bertindak", scores: {strange:2,reed:2} },
+            { text: "Lindungi orang-orang di sekitar", scores: {cap:2,spidey:1} },
+            { text: "Cari celah dan manfaatkan dengan cerdik", scores: {loki:2,deadpool:1} }
+          ]},
+        { q: "Kekuatan super apa yang paling kamu inginkan?",
+          opts: [
+            { text: "Kekuatan fisik yang luar biasa", scores: {thor:2,hulk:2} },
+            { text: "Sihir dan penguasaan dimensi", scores: {strange:2,loki:1} },
+            { text: "Teknologi canggih", scores: {reed:2,spidey:1} },
+            { text: "Regenerasi — nggak bisa mati", scores: {wolverine:2,deadpool:2} }
+          ]},
+        { q: "Bagaimana cara kamu bekerja dalam tim?",
+          opts: [
+            { text: "Saya pemimpinnya", scores: {cap:2,reed:1} },
+            { text: "Solo player, tapi bisa kerja tim kalau perlu", scores: {wolverine:2,strange:1} },
+            { text: "Saya yang bikin suasana cair", scores: {deadpool:2,spidey:1} },
+            { text: "Saya yang diam-diam menyelesaikan semua", scores: {loki:2,hulk:1} }
+          ]},
+        { q: "Film genre apa yang paling kamu suka?",
+          opts: [
+            { text: "Action/petualangan epic", scores: {thor:2,cap:1} },
+            { text: "Sci-fi / teknologi masa depan", scores: {reed:2,spidey:1} },
+            { text: "Komedi / parodi", scores: {deadpool:2,loki:1} },
+            { text: "Horror / thriller gelap", scores: {wolverine:1,hulk:2,strange:1} }
+          ]},
+        { q: "Motto hidup kamu?",
+          opts: [
+            { text: "\"I can do this all day\"", scores: {cap:3} },
+            { text: "\"It's not about how much we lost, it's about how much we have left\"", scores: {thor:2,hulk:1} },
+            { text: "\"With great power comes great responsibility\"", scores: {spidey:3} },
+            { text: "\"Maximum effort!\"", scores: {deadpool:3} }
+          ]}
+    ];
+
+    const results = {
+        cap: { name: "Captain America", desc: "Kamu pemimpin sejati! Penuh integritas, keberanian, dan selalu membela yang benar.", img: "/3bOGNsHlrswhyW79uvIHH1V43JI.jpg" },
+        thor: { name: "Thor", desc: "Kamu punya kekuatan besar dan hati yang mulia. Worthy of Mjolnir!", img: "/piQGdoIQOF3C1EI5cbYZLAW1gfj.jpg" },
+        hulk: { name: "Hulk", desc: "Tenang di luar, dahsyat di dalam. Kamu kombinasi kekuatan dan kecerdasan.", img: "/5GilHMOt5PAQh6rlUKZzGmaKEI7.jpg" },
+        strange: { name: "Doctor Strange", desc: "Kamu visioner dan strategis. Kamu selalu lihat the bigger picture.", img: "/wz3MRiMmoz6b5X3oSzMRC9nLxY1.jpg" },
+        spidey: { name: "Spider-Man", desc: "Kamu peduli sama orang lain dan selalu berusaha melakukan hal yang benar!", img: "/xKBAaPIa1c7tzZD3Y0MhBLv4hPE.jpg" },
+        wolverine: { name: "Wolverine", desc: "Kamu tangguh, nggak gampang menyerah. Petarung sejati sampai akhir!", img: "/4Xujtewxqt6aU0Y81tsS9gkjizk.jpg" },
+        deadpool: { name: "Deadpool", desc: "Kamu lucu, unik, dan nggak peduli apa kata orang. Maximum effort!", img: "/trzgptffGvAlAT6MEu01fz47cLW.jpg" },
+        reed: { name: "Mr. Fantastic", desc: "Otak jenius! Kamu selalu punya solusi untuk masalah apapun.", img: "/oKcMbVn0NJTNzQt0ClKKvVXkm60.jpg" },
+        loki: { name: "Loki", desc: "Cerdik dan misterius. Kamu selalu punya rencana cadangan!", img: "/mclHxMm8aPlCPKptP67257F5GPo.jpg" }
+    };
+
+    let currentQ = 0;
+    let scores = {};
+
+    startBtn.addEventListener("click", () => { currentQ = 0; scores = {}; showQuestion(); });
+
+    function showQuestion() {
+        const q = questions[currentQ];
+        container.innerHTML = `
+            <p class="quiz-question">${q.q}</p>
+            <p class="quiz-progress">Pertanyaan ${currentQ+1} dari ${questions.length}</p>
+            <div class="quiz-options">
+                ${q.opts.map((o,i) => `<button class="quiz-opt" data-idx="${i}">${o.text}</button>`).join("")}
+            </div>`;
+        container.querySelectorAll(".quiz-opt").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const opt = q.opts[parseInt(btn.dataset.idx)];
+                Object.entries(opt.scores).forEach(([k,v]) => { scores[k] = (scores[k]||0) + v; });
+                currentQ++;
+                if (currentQ < questions.length) showQuestion();
+                else showResult();
+            });
+        });
+    }
+
+    function showResult() {
+        const winner = Object.entries(scores).sort((a,b) => b[1] - a[1])[0][0];
+        const r = results[winner];
+        const shareText = encodeURIComponent(`Aku adalah ${r.name} di quiz Avengers Doomsday! Kamu siapa? Cek di sini:`);
+        const shareUrl = encodeURIComponent("https://naga123-prog.github.io/avengers-doomsday/#quiz");
+        container.innerHTML = `
+            <div class="quiz-result">
+                <img src="https://image.tmdb.org/t/p/w200${r.img}" alt="${r.name}" class="quiz-result-img">
+                <p class="quiz-result-name">${r.name}</p>
+                <p class="quiz-result-desc">${r.desc}</p>
+                <div class="quiz-share-row">
+                    <a href="https://wa.me/?text=${shareText}+${shareUrl}" target="_blank" rel="noopener" class="quiz-share-btn"><i class="fab fa-whatsapp"></i> Share</a>
+                    <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener" class="quiz-share-btn"><i class="fab fa-twitter"></i> Tweet</a>
+                </div>
+                <button class="btn-primary" style="margin-top:20px;font-size:13px;padding:10px 24px" id="quizRestart">
+                    <i class="fas fa-redo"></i> Main Lagi
+                </button>
+            </div>`;
+        document.getElementById("quizRestart").addEventListener("click", () => {
+            currentQ = 0; scores = {}; showQuestion();
+        });
+    }
+}
+
+// ─── EASTER EGG: Type "DOOM" ────────────────
+
+function initEasterEgg() {
+    let buffer = "";
+    const overlay = document.getElementById("easterEgg");
+
+    addEventListener("keydown", (e) => {
+        if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+        buffer += e.key.toUpperCase();
+        if (buffer.length > 10) buffer = buffer.slice(-10);
+        if (buffer.includes("DOOM")) {
+            buffer = "";
+            overlay.classList.add("active");
+            document.body.style.overflow = "hidden";
+            setTimeout(() => {
+                overlay.classList.remove("active");
+                document.body.style.overflow = "";
+            }, 3500);
+        }
+    });
+
+    overlay.addEventListener("click", () => {
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+    });
+}
+
+// ─── PARALLAX BANNER ────────────────────────
+
+function initParallax() {
+    const poster = document.querySelector(".banner-poster-img");
+    if (!poster) return;
+    addEventListener("scroll", () => {
+        const y = scrollY;
+        if (y < innerHeight) {
+            poster.style.transform = `scale(1.05) translateY(${y * 0.15}px)`;
+        }
+    });
 }

@@ -25,6 +25,7 @@
 
     <!-- Navigation -->
     <nav id="navbar">
+        <div class="scroll-progress" id="scrollProgress"></div>
         <div class="nav-container">
             <a href="#hero-banner" class="nav-logo">
                 <img src="https://image.tmdb.org/t/p/w154/ou2QfUBPnp5tGqYj5yn3VIsWtUF.png"
@@ -38,6 +39,8 @@
                 <li><a href="#villain" data-section="villain">Villain</a></li>
                 <li><a href="#schedule" data-section="schedule">Jadwal</a></li>
                 <li><a href="#tickets" data-section="tickets">Tiket</a></li>
+                <li><a href="#gallery" data-section="gallery">Gallery</a></li>
+                <li><a href="#quiz" data-section="quiz">Quiz</a></li>
             </ul>
             <button class="nav-toggle" id="navToggle">
                 <span></span><span></span><span></span>
@@ -75,6 +78,9 @@
                 <a href="#tickets" class="btn-secondary">
                     <i class="fas fa-ticket-alt"></i> Beli Tiket
                 </a>
+                <button class="btn-secondary" id="openTrailer">
+                    <i class="fas fa-play"></i> Watch Trailer
+                </button>
             </div>
             <div class="banner-meta">
                 <span><i class="fas fa-film"></i> Action / Sci-Fi</span>
@@ -154,6 +160,10 @@
                     <div class="countdown-label">DETIK</div>
                 </div>
             </div>
+
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Avengers%3A+Doomsday+Premiere&dates=20261218T100000Z/20261218T130000Z&details=Avengers+Doomsday+tayang+di+bioskop!&location=Bioskop+terdekat" target="_blank" rel="noopener" class="remind-me-btn">
+                <i class="fas fa-bell"></i> Remind Me — Tambah ke Google Calendar
+            </a>
         </div>
     </section>
 
@@ -548,6 +558,39 @@
         </div>
     </section>
 
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <div class="section-container">
+            <h2 class="section-title reveal-text">GALLERY</h2>
+            <p class="section-subtitle">Foto & Gambar Resmi dari Film</p>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lb-close" id="lbClose"><i class="fas fa-xmark"></i></button>
+        <button class="lb-prev" id="lbPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="lb-next" id="lbNext"><i class="fas fa-chevron-right"></i></button>
+        <img id="lbImg" src="" alt="Gallery">
+        <div class="lb-counter" id="lbCounter"></div>
+    </div>
+
+    <!-- Quiz Section -->
+    <section id="quiz">
+        <div class="section-container">
+            <h2 class="section-title reveal-text" style="color: var(--doom-green);">WHICH AVENGER ARE YOU?</h2>
+            <p class="section-subtitle">Jawab 5 pertanyaan dan temukan hero dalam dirimu!</p>
+            <div class="quiz-container glass-card" id="quizContainer">
+                <div id="quizContent">
+                    <button class="btn-primary quiz-start" id="startQuiz"><i class="fas fa-play"></i> Mulai Quiz</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
         <div class="footer-inner">
@@ -567,8 +610,42 @@
         </div>
     </footer>
 
+    <!-- Trailer Modal -->
+    <div class="modal-overlay" id="trailerModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeTrailer"><i class="fas fa-xmark"></i></button>
+            <div class="modal-video">
+                <iframe id="trailerFrame" src="" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+            </div>
+            <p class="modal-caption">Avengers: Doomsday — Official Trailer</p>
+        </div>
+    </div>
+
+    <!-- Sound Toggle -->
+    <button id="soundToggle" class="sound-btn" title="Toggle ambient sound">
+        <i class="fas fa-volume-xmark"></i>
+    </button>
+
+    <!-- Share Menu -->
+    <div class="share-fab" id="shareFab">
+        <button class="share-btn-main" id="shareToggle"><i class="fas fa-share-nodes"></i></button>
+        <div class="share-options" id="shareOptions">
+            <a class="share-opt" id="shareWA" target="_blank" rel="noopener" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a class="share-opt" id="shareTW" target="_blank" rel="noopener" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <button class="share-opt" id="shareCopy" title="Copy Link"><i class="fas fa-link"></i></button>
+        </div>
+    </div>
+
     <!-- Back to Top -->
     <button id="backToTop"><i class="fas fa-chevron-up"></i></button>
+
+    <!-- Easter Egg -->
+    <div class="easter-egg-overlay" id="easterEgg">
+        <div class="ee-content">
+            <div class="ee-glitch" data-text="DOOM">DOOM</div>
+            <p class="ee-sub">You have awakened Doctor Doom...</p>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
