@@ -4,6 +4,8 @@
    ============================================= */
 
 const IMG = "https://image.tmdb.org/t/p/w500";
+const API_URL = window.location.hostname === "localhost" ? "http://localhost:3001" : "https://avengers-doomsday-api.onrender.com";
+let socket = null;
 
 const CAST = [
     // ── AVENGERS ──
@@ -202,6 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initQuiz();
     initEasterEgg();
     initParallax();
+    initBackend();
 });
 
 // ─── LOADER ─────────────────────────────────
@@ -844,4 +847,171 @@ function initParallax() {
             poster.style.transform = `scale(1.05) translateY(${y * 0.15}px)`;
         }
     });
+}
+
+// ─── BACKEND CONNECTION ─────────────────────
+
+function initBackend() {
+    try {
+        socket = io(API_URL, { transports: ["websocket", "polling"], timeout: 5000 });
+        socket.on("connect", () => console.log("Connected to Doomsday API"));
+        socket.on("connect_error", () => console.log("API offline — running in static mode"));
+    } catch (e) {
+        console.log("Socket.IO not available — static mode");
+    }
+
+    initVisitorCounter();
+    initReviews();
+    initLiveChat();
+}
+
+// ─── VISITOR COUNTER ────────────────────────
+
+function initVisitorCounter() {
+    fetch(API_URL + "/api/visit", { method: "POST" })
+        .then(r => r.json())
+        .then(d => { document.getElementById("visitorCount").textContent = d.count.toLocaleString("id-ID"); })
+        .catch(() => { document.getElementById("visitorCount").textContent = "-"; });
+}
+
+// ─── REVIEWS ────────────────────────────────
+
+function initReviews() {
+    let selectedRating = 0;
+    const stars = document.querySelectorAll("#starRating i");
+    const list = document.getElementById("reviewsList");
+
+    stars.forEach(s => {
+        s.addEventListener("click", () => {
+            selectedRating = parseInt(s.dataset.val);
+            stars.forEach(st => st.classList.toggle("active", parseInt(st.dataset.val) <= selectedRating));
+        });
+        s.addEventListener("mouseenter", () => {
+            const v = parseInt(s.dataset.val);
+            stars.forEach(st => st.classList.toggle("active", parseInt(st.dataset.val) <= v));
+        });
+    });
+    document.getElementById("starRating").addEventListener("mouseleave", () => {
+        stars.forEach(st => st.classList.toggle("active", parseInt(st.dataset.val) <= selectedRating));
+    });
+
+    document.getElementById("submitReview").addEventListener("click", () => {
+        const username = document.getElementById("reviewName").value.trim();
+        const comment = document.getElementById("reviewComment").value.trim();
+        if (!username || !comment || !selectedRating) {
+            alert("Isi nama, rating, dan komentar ya!"); return;
+        }
+        fetch(API_URL + "/api/reviews", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, rating: selectedRating, comment })
+        })
+        .then(r => r.json())
+        .then(() => {
+            document.getElementById("reviewName").value = "";
+            document.getElementById("reviewComment").value = "";
+            selectedRating = 0;
+            stars.forEach(s => s.classList.remove("active"));
+        })
+        .catch(() => alert("Server belum aktif. Coba lagi nanti!"));
+    });
+
+    fetch(API_URL + "/api/reviews")
+        .then(r => r.json())
+        .then(reviews => reviews.forEach(r => appendReview(r)))
+        .catch(() => {
+            list.innerHTML = '<p class="chat-empty">Server belum aktif — review akan muncul setelah backend di-deploy.</p>';
+        });
+
+    if (socket) socket.on("new-review", r => appendReview(r, true));
+
+    function appendReview(r, prepend) {
+        const div = document.createElement("div");
+        div.className = "review-item";
+        const starsHtml = Array(5).fill(0).map((_, i) =>
+            `<i class="fas fa-star" style="color:${i < r.rating ? '#ffd700' : '#333'}"></i>`
+        ).join("");
+        const time = new Date(r.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+        div.innerHTML = `
+            <div class="review-header">
+                <span class="review-user">${escHtml(r.username)}</span>
+                <span class="review-stars">${starsHtml}</span>
+            </div>
+            <p class="review-text">${escHtml(r.comment)}</p>
+            <p class="review-time">${time}</p>`;
+        if (prepend) list.prepend(div); else list.appendChild(div);
+    }
+}
+
+// ─── LIVE CHAT ──────────────────────────────
+
+function initLiveChat() {
+    const messages = document.getElementById("chatMessages");
+    const typing = document.getElementById("chatTyping");
+    const nameIn = document.getElementById("chatName");
+    const msgIn = document.getElementById("chatMsg");
+    const sendBtn = document.getElementById("chatSend");
+    let typingTimer;
+
+    if (!socket) {
+        messages.innerHTML = '<p class="chat-empty">Server belum aktif — chat akan aktif setelah backend di-deploy.</p>';
+        return;
+    }
+
+    messages.innerHTML = '<p class="chat-empty">Belum ada pesan. Mulai chat!</p>';
+
+    socket.on("chat-history", (history) => {
+        if (history.length) {
+            messages.innerHTML = "";
+            history.forEach(m => appendMsg(m));
+        }
+    });
+
+    socket.on("chat-msg", (m) => appendMsg(m));
+
+    socket.on("online-count", (n) => {
+        const el = document.getElementById("onlineCount");
+        if (el) el.textContent = n;
+    });
+
+    socket.on("typing", (user) => {
+        typing.textContent = user + " sedang mengetik...";
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => typing.textContent = "", 2000);
+    });
+
+    function send() {
+        const username = nameIn.value.trim();
+        const message = msgIn.value.trim();
+        if (!username || !message) return;
+        socket.emit("chat-msg", { username, message });
+        msgIn.value = "";
+    }
+
+    sendBtn.addEventListener("click", send);
+    msgIn.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { send(); return; }
+        const name = nameIn.value.trim();
+        if (name) socket.emit("typing", name);
+    });
+
+    function appendMsg(m) {
+        const first = messages.querySelector(".chat-empty");
+        if (first) first.remove();
+        const div = document.createElement("div");
+        div.className = "chat-msg";
+        const t = new Date(m.time).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+        div.innerHTML = `
+            <div class="chat-msg-user">${escHtml(m.username)}</div>
+            <div class="chat-msg-text">${escHtml(m.message)}</div>
+            <div class="chat-msg-time">${t}</div>`;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    }
+}
+
+function escHtml(s) {
+    const d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
 }

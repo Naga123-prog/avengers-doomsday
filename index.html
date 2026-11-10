@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" href="https://image.tmdb.org/t/p/w92/9jlZ59UALLLOE279HMT19rP9XQs.jpg">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </head>
 <body>
     <!-- Loading Screen -->
@@ -41,6 +42,8 @@
                 <li><a href="#tickets" data-section="tickets">Tiket</a></li>
                 <li><a href="#gallery" data-section="gallery">Gallery</a></li>
                 <li><a href="#quiz" data-section="quiz">Quiz</a></li>
+                <li><a href="#reviews" data-section="reviews">Review</a></li>
+                <li><a href="#chat" data-section="chat">Chat</a></li>
             </ul>
             <button class="nav-toggle" id="navToggle">
                 <span></span><span></span><span></span>
@@ -164,6 +167,9 @@
             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Avengers%3A+Doomsday+Premiere&dates=20261218T100000Z/20261218T130000Z&details=Avengers+Doomsday+tayang+di+bioskop!&location=Bioskop+terdekat" target="_blank" rel="noopener" class="remind-me-btn">
                 <i class="fas fa-bell"></i> Remind Me — Tambah ke Google Calendar
             </a>
+            <div class="visitor-counter" id="visitorCounter">
+                <i class="fas fa-eye"></i> <span id="visitorCount">...</span> pengunjung
+            </div>
         </div>
     </section>
 
@@ -586,6 +592,46 @@
             <div class="quiz-container glass-card" id="quizContainer">
                 <div id="quizContent">
                     <button class="btn-primary quiz-start" id="startQuiz"><i class="fas fa-play"></i> Mulai Quiz</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews">
+        <div class="section-container">
+            <h2 class="section-title reveal-text">REVIEW FANS</h2>
+            <p class="section-subtitle">Apa kata fans tentang Doomsday?</p>
+            <div class="review-form glass-card">
+                <div class="review-form-row">
+                    <input type="text" id="reviewName" placeholder="Nama kamu" maxlength="50" class="review-input">
+                    <div class="star-rating" id="starRating">
+                        <i class="fas fa-star" data-val="1"></i>
+                        <i class="fas fa-star" data-val="2"></i>
+                        <i class="fas fa-star" data-val="3"></i>
+                        <i class="fas fa-star" data-val="4"></i>
+                        <i class="fas fa-star" data-val="5"></i>
+                    </div>
+                </div>
+                <textarea id="reviewComment" placeholder="Tulis review kamu..." maxlength="500" class="review-textarea"></textarea>
+                <button id="submitReview" class="btn-primary" style="width:100%"><i class="fas fa-paper-plane"></i> Kirim Review</button>
+            </div>
+            <div class="reviews-list" id="reviewsList"></div>
+        </div>
+    </section>
+
+    <!-- Live Chat -->
+    <section id="chat">
+        <div class="section-container">
+            <h2 class="section-title reveal-text" style="color:var(--doom-green);">LIVE CHAT</h2>
+            <p class="section-subtitle"><i class="fas fa-circle" style="color:#00ff41;font-size:8px"></i> <span id="onlineCount">0</span> online</p>
+            <div class="chat-box glass-card">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-typing" id="chatTyping"></div>
+                <div class="chat-input-row">
+                    <input type="text" id="chatName" placeholder="Nama" maxlength="30" class="chat-name-input">
+                    <input type="text" id="chatMsg" placeholder="Ketik pesan..." maxlength="300" class="chat-msg-input">
+                    <button id="chatSend" class="chat-send-btn"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>

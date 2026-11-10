@@ -1,0 +1,4 @@
+node_modules/
+doomsday.db
+server/doomsday.db-shm
+server/doomsday.db-wal
